@@ -1,0 +1,10 @@
+programa adibidea
+
+/ esto no es un 
+  comentario 
+
+comienzo
+
+   a = a * 0.4756 ;
+  
+fin ;

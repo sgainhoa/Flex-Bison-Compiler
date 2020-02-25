@@ -1,0 +1,35 @@
+prog ejemplo_con_nombre_muy_largo {
+
+ int a, b, c ;
+ float d, e ;
+(* esto es un comentario *)
+
+	proc suma(int x, y : in; int resul : in out){
+	   int aux;
+	   aux = x;
+	   resul = y;
+	   if resul < 1000 then {
+		int iteraciones;
+		iteraciones = 0;   	
+		while aux /= 0 loop{
+			resul = resul + 1;
+			exit if resul > 1000000;
+			aux = aux - 1;
+			iteraciones = iteraciones + 1;
+			}
+		finally {
+			println(iteraciones);	
+			};	#fin del while
+	    };	#fin del if
+
+	 }
+
+
+   read(a); read(b);
+   d = 1/b;
+   e = 0.1e-1/a;
+   (* suma(a,b,c); esto solo para aquellos que 
+                   traten llamadas a procedimientos *)
+   c = c*(c*d)+e;
+   println(c*c);
+} 
