@@ -24,10 +24,11 @@
 /* 
    declaración de tokens. Esto debe coincidir con tokens.l 
 */
-%token <str> TIDENTIFIER TINTEGER TDOUBLE
-%token <str> TMUL
-%token <str> TSEMIC TASSIG TLBRACE TRBRACE
-%token <str> RPROGRAM RBEGIN RENDPROGRAM
+%token <str> TIDENTIFIER TINTEGER TFLOAT
+%token <str> TCEQ TCGT TCLT TCGE TCLE TCNE
+%token <str> TMUL TDIV TPLUS TMINUS 
+%token <str> TSEMIC TASSIG TLBRACE TRBRACE TLPAREN TRPAREN
+%token <str> RPROGRAM RBEGIN RENDPROGRAM RINTEGER RFLOAT RIF RTHEN RWHILE RFOREVER RLOOP RFINALLY REXITIF RREAD RPRINT RPROC 
 
 /* 
    declaración de no terminales. Por ej:
