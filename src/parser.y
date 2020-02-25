@@ -29,7 +29,7 @@
 %token <str> TMUL TDIV TPLUS TMINUS
 %token <str> TCEQ TCGT TCLT TCGE TCLE TCNE
 %token <str> TSEMIC TCOMMA TCOLON TASSIG TLBRACE TRBRACE TLPAREN TRPAREN
-%token <str> RPROGRAM RINTEGER RFLOAT RIF RTHEN RWHILE RFOREVER RLOOP RFINALLY REXITIF RREAD RPRINT RPROC RIN ROUT 
+%token <str> RPROGRAM RINTEGER RFLOAT RIF RTHEN RWHILE RFOREVER RLOOP RFINALLY REXIT RREAD RPRINT RPROC RIN ROUT 
 
 %nonassoc TCEQ TCGT TCLT TCGE TCLE TCNE
 %left TPLUS TMINUS
@@ -67,7 +67,7 @@ bloqueppl : TLBRACE declaraciones decl_de_subprogs lista_de_sentencias TRBRACE ;
 
 bloque : TLBRACE declaraciones lista_de_sentencias TRBRACE ;
 
-declaraciones : tipo_lista_de_ident TSEMIC declaraciones
+declaraciones : tipo lista_de_ident TSEMIC declaraciones
 	      | %empty
 	      ;
 

@@ -27,7 +27,7 @@ forever                                              TOKEN(RFOREVER);
 while                                                TOKEN(RWHILE);
 loop                                                 TOKEN(RLOOP);
 finally                                              TOKEN(RFINALLY);
-exit if                                              TOKEN(REXITIF);
+exit                                                 TOKEN(REXIT);
 read                                                 TOKEN(RREAD);
 println                                              TOKEN(RPRINT);
 proc                                                 TOKEN(RPROC);

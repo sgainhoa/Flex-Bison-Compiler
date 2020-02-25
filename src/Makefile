@@ -1,9 +1,10 @@
 CFLAGS=-Wall
+TESTDIR=tests
 
 all: parser prueba
 
 clean:
-	rm parser.cpp parser.hpp parser tokens.cpp *~ 
+	rm parser.cpp parser.hpp parser tokens.cpp 
 
 parser.cpp: parser.y
 	bison -d -o $@ $^
@@ -16,7 +17,7 @@ tokens.cpp: tokens.l parser.hpp
 parser: parser.cpp main.cpp tokens.cpp
 	g++ $(CFLAGS) -o $@ *.cpp 
 
-prueba:  parser ../prueba1.in ../prueba2.in ../pruebamala1.in
-	./parser <../prueba1.in
-	./parser <../prueba2.in
-	./parser <../pruebamala1.in
+prueba:  parser ../$(TESTDIR)/prueba1.in ../$(TESTDIR)/prueba2.in ../$(TESTDIR)/pruebamala1.in
+	./parser <../$(TESTDIR)/prueba1.in
+	./parser <../$(TESTDIR)/prueba2.in
+	./parser <../$(TESTDIR)/pruebamala1.in
