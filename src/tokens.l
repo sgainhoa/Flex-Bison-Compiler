@@ -37,6 +37,7 @@ out                                                  TOKEN(ROUT);
 "/"                                                  TOKEN(TDIV);
 "="                                                  TOKEN(TASSIG);
 ";"                                                  TOKEN(TSEMIC);
+","                                                  TOKEN(TCOMMA);
 "{"                                                  TOKEN(TLBRACE);
 "}"                                                  TOKEN(TRBRACE);
 "("                                                  TOKEN(TLPAREN);
