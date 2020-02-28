@@ -4,7 +4,6 @@
  #include <string>
  #include <iostream>
  #include <vector>
- using namespace std ;
  #include "parser.hpp" 
  using namespace std;
 
@@ -13,6 +12,8 @@
  extern "C" int yywrap() { return(1) ; }  
 
 %}
+
+%option nounput
 
 %%
 \(\*(\*+[^\)]|[^\*])*\*+\)                           ;
