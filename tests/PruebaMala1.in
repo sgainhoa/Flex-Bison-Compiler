@@ -1,0 +1,24 @@
+prog fibonacci{
+    (*
+        Obtiene si el numero dado como parametro es de fibonacci o no
+        Ups, se me ha olvidado el cierre del comentario
+    
+    proc esFibonacci(int x : in;int result:out){
+        int n1,fib_Total;
+        n1 = 0;
+        fib_Total = 1;
+        while fib_total < x loop{ # n = (n-1) + (n-2)
+            fib_Total = n1 + fib_Total;
+            n1 = fib_Total - n1;
+        } finally {
+            if fib_Total == x then { # Si es el mismo el numero es de fibonacci
+                result = 1;
+            };
+            if fib_Total /= x then { # Si no, no lo es
+                result = 0;
+            };
+        };
+        
+
+    }
+}

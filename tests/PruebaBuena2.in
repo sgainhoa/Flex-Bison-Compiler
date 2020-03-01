@@ -1,0 +1,23 @@
+prog operaciones{
+
+    proc multiplicacion(int x:in;int y:in;int res:out){
+        int resultado,menor,mayor;
+        resultado = 0;
+        (*Seleccionamos el menor de los dos numeros para iterar*)
+        if x <= y then{
+            menor = x;
+            mayor = y;
+        };
+        if y < x then{
+            menor = y;
+            mayor = x;
+        };
+        (*Mientras el menor no sea 0*)
+        while menor > 0 loop{
+            resultado = resultado + mayor;
+            menor = menor - 1;
+        }finally{
+            res = resultado; #Asignamos al parametro de salida el resultado
+        };
+    }
+}
