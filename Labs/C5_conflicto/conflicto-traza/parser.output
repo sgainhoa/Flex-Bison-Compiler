@@ -1,0 +1,274 @@
+Terminales no usados en la gramática
+
+   TMUL
+
+
+Estado 20 conflictos: 1 desplazamiento/reducción
+
+
+Gramática
+
+    0 $accept: programa $end
+
+    1 programa: RPROGRAM TIDENTIFIER RBEGIN listasentencias RENDPROGRAM
+
+    2 listasentencias: sentencia
+    3                | sentencia TSEMIC listasentencias
+
+    4 sentencia: TIDENTIFIER TASSIG expr
+    5          | RIF expr RTHEN sentencia
+    6          | RIF expr RTHEN sentencia RELSE sentencia
+
+    7 expr: TIDENTIFIER
+    8     | TINTEGER
+    9     | TDOUBLE
+
+
+Terminales con las reglas donde aparecen
+
+$end (0) 0
+error (256)
+TIDENTIFIER (258) 1 4 7
+TINTEGER (259) 8
+TDOUBLE (260) 9
+TMUL (261)
+TSEMIC (262) 3
+TASSIG (263) 4
+RPROGRAM (264) 1
+RBEGIN (265) 1
+RENDPROGRAM (266) 1
+RIF (267) 5 6
+RTHEN (268) 5 6
+RELSE (269) 6
+
+
+No terminales con las reglas donde aparecen
+
+$accept (15)
+    en la izquierda: 0
+programa (16)
+    en la izquierda: 1, en la derecha: 0
+listasentencias (17)
+    en la izquierda: 2 3, en la derecha: 1 3
+sentencia (18)
+    en la izquierda: 4 5 6, en la derecha: 2 3 5 6
+expr (19)
+    en la izquierda: 7 8 9, en la derecha: 4 5 6
+
+
+Estado 0
+
+    0 $accept: . programa $end
+    1 programa: . RPROGRAM TIDENTIFIER RBEGIN listasentencias RENDPROGRAM
+
+    RPROGRAM  desplazar e ir al estado 1
+
+    programa  ir al estado 2
+
+
+Estado 1
+
+    1 programa: RPROGRAM . TIDENTIFIER RBEGIN listasentencias RENDPROGRAM
+
+    TIDENTIFIER  desplazar e ir al estado 3
+
+
+Estado 2
+
+    0 $accept: programa . $end
+
+    $end  desplazar e ir al estado 4
+
+
+Estado 3
+
+    1 programa: RPROGRAM TIDENTIFIER . RBEGIN listasentencias RENDPROGRAM
+
+    RBEGIN  desplazar e ir al estado 5
+
+
+Estado 4
+
+    0 $accept: programa $end .
+
+    $default  aceptar
+
+
+Estado 5
+
+    1 programa: RPROGRAM TIDENTIFIER RBEGIN . listasentencias RENDPROGRAM
+    2 listasentencias: . sentencia
+    3                | . sentencia TSEMIC listasentencias
+    4 sentencia: . TIDENTIFIER TASSIG expr
+    5          | . RIF expr RTHEN sentencia
+    6          | . RIF expr RTHEN sentencia RELSE sentencia
+
+    TIDENTIFIER  desplazar e ir al estado 6
+    RIF          desplazar e ir al estado 7
+
+    listasentencias  ir al estado 8
+    sentencia        ir al estado 9
+
+
+Estado 6
+
+    4 sentencia: TIDENTIFIER . TASSIG expr
+
+    TASSIG  desplazar e ir al estado 10
+
+
+Estado 7
+
+    5 sentencia: RIF . expr RTHEN sentencia
+    6          | RIF . expr RTHEN sentencia RELSE sentencia
+    7 expr: . TIDENTIFIER
+    8     | . TINTEGER
+    9     | . TDOUBLE
+
+    TIDENTIFIER  desplazar e ir al estado 11
+    TINTEGER     desplazar e ir al estado 12
+    TDOUBLE      desplazar e ir al estado 13
+
+    expr  ir al estado 14
+
+
+Estado 8
+
+    1 programa: RPROGRAM TIDENTIFIER RBEGIN listasentencias . RENDPROGRAM
+
+    RENDPROGRAM  desplazar e ir al estado 15
+
+
+Estado 9
+
+    2 listasentencias: sentencia .  [RENDPROGRAM]
+    3                | sentencia . TSEMIC listasentencias
+
+    TSEMIC  desplazar e ir al estado 16
+
+    $default  reduce usando la regla 2 (listasentencias)
+
+
+Estado 10
+
+    4 sentencia: TIDENTIFIER TASSIG . expr
+    7 expr: . TIDENTIFIER
+    8     | . TINTEGER
+    9     | . TDOUBLE
+
+    TIDENTIFIER  desplazar e ir al estado 11
+    TINTEGER     desplazar e ir al estado 12
+    TDOUBLE      desplazar e ir al estado 13
+
+    expr  ir al estado 17
+
+
+Estado 11
+
+    7 expr: TIDENTIFIER .
+
+    $default  reduce usando la regla 7 (expr)
+
+
+Estado 12
+
+    8 expr: TINTEGER .
+
+    $default  reduce usando la regla 8 (expr)
+
+
+Estado 13
+
+    9 expr: TDOUBLE .
+
+    $default  reduce usando la regla 9 (expr)
+
+
+Estado 14
+
+    5 sentencia: RIF expr . RTHEN sentencia
+    6          | RIF expr . RTHEN sentencia RELSE sentencia
+
+    RTHEN  desplazar e ir al estado 18
+
+
+Estado 15
+
+    1 programa: RPROGRAM TIDENTIFIER RBEGIN listasentencias RENDPROGRAM .
+
+    $default  reduce usando la regla 1 (programa)
+
+
+Estado 16
+
+    2 listasentencias: . sentencia
+    3                | . sentencia TSEMIC listasentencias
+    3                | sentencia TSEMIC . listasentencias
+    4 sentencia: . TIDENTIFIER TASSIG expr
+    5          | . RIF expr RTHEN sentencia
+    6          | . RIF expr RTHEN sentencia RELSE sentencia
+
+    TIDENTIFIER  desplazar e ir al estado 6
+    RIF          desplazar e ir al estado 7
+
+    listasentencias  ir al estado 19
+    sentencia        ir al estado 9
+
+
+Estado 17
+
+    4 sentencia: TIDENTIFIER TASSIG expr .
+
+    $default  reduce usando la regla 4 (sentencia)
+
+
+Estado 18
+
+    4 sentencia: . TIDENTIFIER TASSIG expr
+    5          | . RIF expr RTHEN sentencia
+    5          | RIF expr RTHEN . sentencia
+    6          | . RIF expr RTHEN sentencia RELSE sentencia
+    6          | RIF expr RTHEN . sentencia RELSE sentencia
+
+    TIDENTIFIER  desplazar e ir al estado 6
+    RIF          desplazar e ir al estado 7
+
+    sentencia  ir al estado 20
+
+
+Estado 19
+
+    3 listasentencias: sentencia TSEMIC listasentencias .
+
+    $default  reduce usando la regla 3 (listasentencias)
+
+
+Estado 20
+
+    5 sentencia: RIF expr RTHEN sentencia .  [TSEMIC, RENDPROGRAM, RELSE]
+    6          | RIF expr RTHEN sentencia . RELSE sentencia
+
+    RELSE  desplazar e ir al estado 21
+
+    RELSE     [reduce usando la regla 5 (sentencia)]
+    $default  reduce usando la regla 5 (sentencia)
+
+
+Estado 21
+
+    4 sentencia: . TIDENTIFIER TASSIG expr
+    5          | . RIF expr RTHEN sentencia
+    6          | . RIF expr RTHEN sentencia RELSE sentencia
+    6          | RIF expr RTHEN sentencia RELSE . sentencia
+
+    TIDENTIFIER  desplazar e ir al estado 6
+    RIF          desplazar e ir al estado 7
+
+    sentencia  ir al estado 22
+
+
+Estado 22
+
+    6 sentencia: RIF expr RTHEN sentencia RELSE sentencia .
+
+    $default  reduce usando la regla 6 (sentencia)

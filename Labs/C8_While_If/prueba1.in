@@ -1,0 +1,18 @@
+program prueba1 is
+var k : float ;
+var s2,s3 : integer ;
+
+begin
+
+  k := k + 6 * 6 - 4;
+  s2 := 0;
+ 
+ if (k-1>0*7) then 
+    k := k/7	;
+    s2 := s2 + 1;
+ else
+    k := 0;
+    s2 := 0;
+endif ;
+  
+endprogram ;

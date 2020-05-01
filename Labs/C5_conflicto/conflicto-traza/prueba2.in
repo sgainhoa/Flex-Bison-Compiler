@@ -1,0 +1,15 @@
+programa ejemplo
+
+// ¿los si son ambiguos?
+// ¿qué solución ha adoptado?
+
+
+comienzo
+
+   si 1 entonces
+      si 2 entonces
+         a = 3 
+      sino
+         a= 4 
+
+fin

@@ -1,0 +1,9 @@
+program prueba3 is
+
+begin
+ 
+x := y * z / e + 3.2 - 4.5 * 7.76 * 2 / 5.98 - 1.01;
+y := x - 2 * t * u + 3 / 2 * 100;
+z := x - y * 2.5;
+
+endprogram ;

@@ -1,0 +1,19 @@
+program prueba1 is
+
+var a,b : integer ;
+
+begin
+ 
+  while (a+3 < b-3) do
+    
+    if b < 0 then 
+        continue;
+    else
+        b := b - 1;
+    endif;
+    a := a + 1;
+   
+  endwhile ;
+ 
+
+endprogram ;

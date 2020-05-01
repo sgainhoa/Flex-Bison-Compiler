@@ -1,0 +1,11 @@
+program pruebaDiv0 is
+var a,b : integer ;
+begin
+
+ while (a+3 < b-3) do
+ continue if a > 0;
+ a := a + 1;
+ a := a / b;
+
+ endwhile ;
+ endprogram ;

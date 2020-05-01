@@ -1,0 +1,12 @@
+program prueba2 is
+
+
+
+begin
+ 
+ a := b + 6 + 6 + 4;
+ 
+ 
+ a:=b;
+
+endprogram ;

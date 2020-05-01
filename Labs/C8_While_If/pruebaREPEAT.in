@@ -1,0 +1,22 @@
+program pruebaIF is
+
+var a,b : integer ;
+
+begin
+ 
+ a := b + 6 * 6 - 4;
+ 
+ repeat
+    a := a+1;
+    b:= a -3 / 2;
+ while a < 3 endrepeat;
+
+ 
+ repeat 
+    a := a + 2;
+    b := b - 2;
+ until a > b endrepeat;
+  
+ a:=b;
+
+endprogram ;

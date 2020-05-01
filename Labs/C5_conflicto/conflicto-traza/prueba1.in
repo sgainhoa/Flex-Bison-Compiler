@@ -1,0 +1,10 @@
+programa ejemplo
+
+// hemos cambiado el uso del punto y coma,
+// ahora solo entre sentencias!!      
+
+comienzo
+
+     si 1 entonces a = 3 
+  
+fin 

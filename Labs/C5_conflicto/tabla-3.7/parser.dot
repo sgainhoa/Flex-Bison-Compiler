@@ -1,0 +1,39 @@
+// Generado por GNU Bison 3.0.4.
+// Informe de errores a <bug-bison@gnu.org>.
+// Página web: <http://www.gnu.org/software/bison/>.
+
+digraph "parser.y"
+{
+  node [fontname = courier, shape = box, colorscheme = paired6]
+  edge [fontname = courier]
+
+  0 [label="Estado 0\n\l  0 $accept: . S $end\l  1 S: . RIF S RELSE S\l  2  | . RIF S\l  3  | . TIDENTIFIER\l"]
+  0 -> 1 [style=solid label="TIDENTIFIER"]
+  0 -> 2 [style=solid label="RIF"]
+  0 -> 3 [style=dashed label="S"]
+  1 [label="Estado 1\n\l  3 S: TIDENTIFIER .\l"]
+  1 -> "1R3" [style=solid]
+ "1R3" [label="R3", fillcolor=3, shape=diamond, style=filled]
+  2 [label="Estado 2\n\l  1 S: . RIF S RELSE S\l  1  | RIF . S RELSE S\l  2  | . RIF S\l  2  | RIF . S\l  3  | . TIDENTIFIER\l"]
+  2 -> 1 [style=solid label="TIDENTIFIER"]
+  2 -> 2 [style=solid label="RIF"]
+  2 -> 4 [style=dashed label="S"]
+  3 [label="Estado 3\n\l  0 $accept: S . $end\l"]
+  3 -> 5 [style=solid label="$end"]
+  4 [label="Estado 4\n\l  1 S: RIF S . RELSE S\l  2  | RIF S .  [$end, RELSE]\l"]
+  4 -> 6 [style=solid label="RELSE"]
+  4 -> "4R2d" [label="[RELSE]", style=solid]
+ "4R2d" [label="R2", fillcolor=5, shape=diamond, style=filled]
+  4 -> "4R2" [style=solid]
+ "4R2" [label="R2", fillcolor=3, shape=diamond, style=filled]
+  5 [label="Estado 5\n\l  0 $accept: S $end .\l"]
+  5 -> "5R0" [style=solid]
+ "5R0" [label="Acc", fillcolor=1, shape=diamond, style=filled]
+  6 [label="Estado 6\n\l  1 S: . RIF S RELSE S\l  1  | RIF S RELSE . S\l  2  | . RIF S\l  3  | . TIDENTIFIER\l"]
+  6 -> 1 [style=solid label="TIDENTIFIER"]
+  6 -> 2 [style=solid label="RIF"]
+  6 -> 7 [style=dashed label="S"]
+  7 [label="Estado 7\n\l  1 S: RIF S RELSE S .\l"]
+  7 -> "7R1" [style=solid]
+ "7R1" [label="R1", fillcolor=3, shape=diamond, style=filled]
+}

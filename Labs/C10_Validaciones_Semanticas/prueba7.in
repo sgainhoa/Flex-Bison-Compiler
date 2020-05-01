@@ -1,0 +1,26 @@
+program prueba7 is
+
+var a,b : integer ;
+
+begin
+ 
+  while (a+3 < b-3) do
+    
+    while (a < b + 1) do
+        
+        supercontinue if b < 0;
+        a := a + 1;
+
+    endwhile ;
+
+    while (b < a) do
+
+        b := b - 1;
+        supercontinue;
+
+    endwhile ;
+
+  endwhile ;
+ 
+
+endprogram ;

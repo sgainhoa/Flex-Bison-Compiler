@@ -1,0 +1,9 @@
+program prueba1 is
+
+
+begin
+
+  k := k + 6;
+  s2 := 0;
+ 
+endprogram ;

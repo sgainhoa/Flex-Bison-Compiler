@@ -1,0 +1,106 @@
+Estado 4 conflictos: 1 desplazamiento/reducción
+
+
+Gramática
+
+    0 $accept: S $end
+
+    1 S: RIF S RELSE S
+    2  | RIF S
+    3  | TIDENTIFIER
+
+
+Terminales con las reglas donde aparecen
+
+$end (0) 0
+error (256)
+TIDENTIFIER (258) 3
+RIF (259) 1 2
+RELSE (260) 1
+
+
+No terminales con las reglas donde aparecen
+
+$accept (6)
+    en la izquierda: 0
+S (7)
+    en la izquierda: 1 2 3, en la derecha: 0 1 2
+
+
+Estado 0
+
+    0 $accept: . S $end
+    1 S: . RIF S RELSE S
+    2  | . RIF S
+    3  | . TIDENTIFIER
+
+    TIDENTIFIER  desplazar e ir al estado 1
+    RIF          desplazar e ir al estado 2
+
+    S  ir al estado 3
+
+
+Estado 1
+
+    3 S: TIDENTIFIER .
+
+    $default  reduce usando la regla 3 (S)
+
+
+Estado 2
+
+    1 S: . RIF S RELSE S
+    1  | RIF . S RELSE S
+    2  | . RIF S
+    2  | RIF . S
+    3  | . TIDENTIFIER
+
+    TIDENTIFIER  desplazar e ir al estado 1
+    RIF          desplazar e ir al estado 2
+
+    S  ir al estado 4
+
+
+Estado 3
+
+    0 $accept: S . $end
+
+    $end  desplazar e ir al estado 5
+
+
+Estado 4
+
+    1 S: RIF S . RELSE S
+    2  | RIF S .  [$end, RELSE]
+
+    RELSE  desplazar e ir al estado 6
+
+    RELSE     [reduce usando la regla 2 (S)]
+    $default  reduce usando la regla 2 (S)
+
+
+Estado 5
+
+    0 $accept: S $end .
+
+    $default  aceptar
+
+
+Estado 6
+
+    1 S: . RIF S RELSE S
+    1  | RIF S RELSE . S
+    2  | . RIF S
+    3  | . TIDENTIFIER
+
+    TIDENTIFIER  desplazar e ir al estado 1
+    RIF          desplazar e ir al estado 2
+
+    S  ir al estado 7
+
+
+Estado 7
+
+    1 S: RIF S RELSE S .
+
+    $default  reduce usando la regla 1 (S)

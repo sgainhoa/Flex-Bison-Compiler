@@ -1,0 +1,11 @@
+program pruebaSem is
+var a,b : integer ;
+begin
+ while (a+3 < b-3) do
+
+ continue if b < 0;
+ a := a + 1;
+
+ endwhile ;
+ continue if b < 0;
+endprogram ;

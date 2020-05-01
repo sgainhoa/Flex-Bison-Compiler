@@ -1,0 +1,23 @@
+program pruebaIF is
+
+var a,b : integer ;
+
+begin
+ 
+ a := b + 6 * 6 - 4;
+ 
+if (a+3 < b-3) then
+    a := a * 2;
+    b := b + 1;
+ endif ;
+
+ if (a < b) then
+    if (b-1 = a) then
+        a := a * 3;
+    endif;
+    b := b -5;
+ endif ;
+  
+ a:=b;
+
+endprogram ;
