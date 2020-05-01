@@ -1,7 +1,7 @@
 prog fibonacci{
     (*
         Obtiene si el numero dado como parametro es de fibonacci o no
-        Ups, se me ha olvidado el cierre del comentario
+        Ups, se me ha olvidado el cierre del comentario))**** )**)**)
     
     proc esFibonacci(int x : in;int result:out){
         int n1,fib_Total;

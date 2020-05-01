@@ -1,4 +1,5 @@
-%option yylineno 
+%option yylineno
+%option nounput
 
 %{
  #include <string>
@@ -13,10 +14,8 @@
 
 %}
 
-%option nounput
-
 %%
-\(\*(\*+[^\)]|[^\*])*\*+\)                           ;
+\(\*(\**[^*)]|\))*\*+\)                              ;
 #([^#\n])*$                                          ;
 [ \t\n]                                              ;
 prog                                                 TOKEN(RPROGRAM);

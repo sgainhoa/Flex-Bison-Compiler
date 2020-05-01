@@ -1,26 +1,25 @@
 CFLAGS=-Wall
 TESTDIR=Pruebas
+SRCDIR=src
 
-all: parser prueba
+all: $(SRCDIR)/parser prueba
 
 clean:
-	rm parser.cpp parser.hpp parser tokens.cpp 
+	rm $(SRCDIR)/parser.cpp $(SRCDIR)/parser.hpp $(SRCDIR)/parser $(SRCDIR)/tokens.cpp 
 
-parser.cpp: parser.y
-	bison -d -o $@ $^
+$(SRCDIR)/parser.cpp: $(SRCDIR)/parser.y $(SRCDIR)/Codigo.hpp
+	bison -d -o $@ $<
 
-parser.hpp: parser.cpp
-
-tokens.cpp: tokens.l parser.hpp
+$(SRCDIR)/tokens.cpp: $(SRCDIR)/tokens.l $(SRCDIR)/parser.hpp
 	lex -o $@ $^
 
-parser: parser.cpp main.cpp tokens.cpp
-	g++ $(CFLAGS) -o $@ *.cpp 
+$(SRCDIR)/parser: $(SRCDIR)/parser.cpp $(SRCDIR)/main.cpp $(SRCDIR)/tokens.cpp $(SRCDIR)/Codigo.hpp
+	g++ $(CFLAGS) -o $@ $(SRCDIR)/*.cpp 
 
-prueba:  parser  $(TESTDIR)/PruebaBuena1.in $(TESTDIR)/PruebaBuena2.in $(TESTDIR)/prueba2.in $(TESTDIR)/PruebaMala1.in $(TESTDIR)/PruebaMala2.in $(TESTDIR)/pruebamala1.in 
-	./parser < $(TESTDIR)/PruebaBuena1.in
-	./parser < $(TESTDIR)/PruebaBuena2.in
-	./parser < $(TESTDIR)/prueba2.in
-	./parser < $(TESTDIR)/PruebaMala1.in
-	./parser < $(TESTDIR)/pruebamala1.in
-	./parser < $(TESTDIR)/PruebaMala2.in
+prueba:  $(SRCDIR)/parser  $(TESTDIR)/PruebaBuena1.in $(TESTDIR)/PruebaBuena2.in $(TESTDIR)/prueba2.in $(TESTDIR)/PruebaMala1.in $(TESTDIR)/PruebaMala2.in $(TESTDIR)/pruebamala1.in 
+	$(SRCDIR)/parser < $(TESTDIR)/PruebaBuena1.in
+	$(SRCDIR)/parser < $(TESTDIR)/PruebaBuena2.in
+	$(SRCDIR)/parser < $(TESTDIR)/prueba2.in
+	$(SRCDIR)/parser < $(TESTDIR)/PruebaMala1.in
+	$(SRCDIR)/parser < $(TESTDIR)/pruebamala1.in
+	$(SRCDIR)/parser < $(TESTDIR)/PruebaMala2.in
