@@ -18,7 +18,5 @@ prog fibonacci{
                 result = 0;
             };
         };
-        
-
     }
 }

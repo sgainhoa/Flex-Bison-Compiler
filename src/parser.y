@@ -1,27 +1,41 @@
+%define parse.error verbose
+
 %{
    #include <stdio.h>
    #include <iostream>
    #include <vector>
    #include <string>
-   #include "Codigo.hpp"
    using namespace std; 
 
    extern int yylex();
    extern int yylineno;
    extern char *yytext;
-   string tab = "\t" ;
    void yyerror (const char *msg) {
-     printf("line %d: %s at '%s'\n", yylineno, msg, yytext) ;
+     printf("Line %d: %s\n", yylineno, msg) ;
    }
+
+   #include "Codigo.hpp"
+
+   void printVector(vector<int> &vec);
    Codigo codigo;
 
 %}
 
 /* 
-   qué atributos tienen los tokens 
+   qué atributos tienen los símbolos 
 */
 %union {
-	std::string *str ; 
+    std::string *str ;
+	bloquestruct *blq;
+	lista_de_identstruct *lident;
+	resto_lista_idstruct *rlident;
+	tipostruct *tp;
+	clase_parstruct *cp;
+	lista_de_sentenciasstruct *lsent;
+	sentenciastruct *sent;
+	mstruct *m;
+	variablestruct *var;
+	expresionstruct *expr;
 }
 
 /* 
@@ -32,7 +46,7 @@
 %token <str> TMUL TDIV TPLUS TMINUS
 %token <str> TCEQ TCGT TCLT TCGE TCLE TCNE
 %token <str> TSEMIC TCOMMA TCOLON TASSIG TLBRACE TRBRACE TLPAREN TRPAREN
-%token <str> RPROGRAM RINTEGER RFLOAT RIF RTHEN RWHILE RFOREVER RLOOP RFINALLY REXIT RREAD RPRINT RPROC RIN ROUT 
+%token <str> RPROGRAM RINTEGER RFLOAT RIF RTHEN RWHILE RFOREVER RLOOP RFINALLY REXIT RREAD RPRINT RPROC RIN ROUT RINOUT
 
 %nonassoc TCEQ TCGT TCLT TCGE TCLE TCNE
 %left TPLUS TMINUS
@@ -42,111 +56,273 @@
    declaración de no terminales.
 */
 
-%type <str> programa
-%type <str> bloqueppl
-%type <str> bloque
-%type <str> declaraciones
-%type <vector<str>> lista_de_ident
-%type <vector<str>> resto_lista_id
-%type <str> tipo
-%type <str> decl_de_subprogs
-%type <str> decl_de_subprograma
-%type <str> argumentos
-%type <str> lista_de_param
-%type <str> clase_par
-%type <str> resto_lis_de_param
-%type <str> lista_de_sentencias
-%type <str> sentencia
-%type <str> variable
-%type <str> expresion
+%type <blq> bloque
+%type <lident> lista_de_ident
+%type <rlident> resto_lista_id
+%type <tp> tipo
+%type <cp> clase_par
+%type <lsent> lista_de_sentencias
+%type <sent> sentencia
+%type <var> variable
+%type <expr> expresion
+%type <m> M
 
 %start programa
 
 %%
 
-programa : RPROGRAM TIDENTIFIER bloqueppl  ; 
+programa: RPROGRAM TIDENTIFIER {codigo.anadirInstruccion(*$1 + " " + *$2 + ";");} bloqueppl {codigo.anadirInstruccion("halt;"); codigo.escribir();} ;
 
-bloqueppl : TLBRACE declaraciones decl_de_subprogs lista_de_sentencias TRBRACE ;
+bloqueppl : TLBRACE declaraciones decl_de_subprogs lista_de_sentencias TRBRACE {delete $4;} ;
 
-bloque : TLBRACE declaraciones lista_de_sentencias TRBRACE  ;
+bloque : TLBRACE declaraciones lista_de_sentencias TRBRACE {$$ = new bloquestruct; $$->exits = $3->exits; delete $3;} ;
 
-declaraciones : tipo lista_de_ident TSEMIC declaraciones 
+declaraciones: tipo lista_de_ident {codigo.anadirDeclaraciones($2->lnom,$1->clase); delete $1; delete $2;} TSEMIC declaraciones 
 	      | %empty 
 	      ;
 
 lista_de_ident : TIDENTIFIER resto_lista_id 
-			   { vector<string> $${*$1}; $$.insert($$.end(), $2.begin(), $2.end());};
+				{   
+					$$ = new lista_de_identstruct;
+					$$->lnom = codigo.iniLista(*$1);
+					$$->lnom = *codigo.unir($$->lnom,$2->lnom);
+					delete $2;
+				}
 
-resto_lista_id : TCOMMA TIDENTIFIER resto_lista_id 
-		   { vector<string> $${*$2}; $$.insert($$.end(), $3.begin(), $3.end()); delete $3;}
-	       | %empty 
-		   { vector<string> $$;}
+resto_lista_id : TCOMMA TIDENTIFIER resto_lista_id {
+				$$ = new resto_lista_idstruct;
+				$$->lnom = codigo.iniLista(*$2);
+				$$->lnom = *codigo.unir($$->lnom,$3->lnom);
+				delete $3;
+			} 
+	       | %empty { 
+			   $$ = new resto_lista_idstruct;
+			   $$->lnom = codigo.iniLista(""); }
 	       ;
 
-tipo : RINTEGER {$$ = new string(); *$$ = *$1;}
-     | RFLOAT {$$ = new string(); *$$ = *$1;}
+tipo : RINTEGER { 
+		$$ = new tipostruct;
+		$$->clase = "ent";
+		}
+     | RFLOAT {
+		$$ = new tipostruct;
+		$$->clase = "real";
+		}
      ;
 
 decl_de_subprogs : decl_de_subprograma decl_de_subprogs 
 		 | %empty 
 		 ;
 		 
-decl_de_subprograma : RPROC TIDENTIFIER argumentos bloqueppl ;
+decl_de_subprograma : RPROC TIDENTIFIER {codigo.anadirInstruccion(*$1 + " " + *$2 + ";");} argumentos bloqueppl { codigo.anadirInstruccion("endproc;");} ;
 
-argumentos : TLPAREN lista_de_param TRPAREN 
+argumentos : TLPAREN lista_de_param TRPAREN
 	   | %empty 
 	   ;
 	   
-lista_de_param : tipo lista_de_ident TCOLON clase_par resto_lis_de_param ;
+lista_de_param : tipo lista_de_ident TCOLON clase_par { codigo.anadirParametros($2->lnom,$4->tipo,$1->clase); delete $1; delete $2; delete $4;} resto_lis_de_param ;
 
-clase_par : RIN 
-	  | ROUT 
-	  | RIN ROUT 
+clase_par : RIN {
+			$$ = new clase_parstruct;
+			$$->tipo = "in";
+		}
+	  | ROUT {
+		  	$$ = new clase_parstruct;
+			$$->tipo = "out";
+			}
+	  | RINOUT {
+		  	$$ = new clase_parstruct;
+			$$->tipo = "in out";
+			}
 	  ;
 
-resto_lis_de_param : TSEMIC tipo lista_de_ident TCOLON clase_par resto_lis_de_param 
+resto_lis_de_param : TSEMIC tipo lista_de_ident TCOLON clase_par { codigo.anadirParametros($3->lnom,$5->tipo,$2->clase); delete $2; delete $3; delete $5;} resto_lis_de_param 
 	  	   | %empty 
 	           ;
 
-lista_de_sentencias : sentencia lista_de_sentencias 
-		    | %empty 
+lista_de_sentencias : sentencia lista_de_sentencias {$$ = new lista_de_sentenciasstruct; $$->exits = *codigo.unir($1->exits, $2->exits); delete $1; delete $2;}
+		    | %empty {$$ = new lista_de_sentenciasstruct; $$->exits = codigo.iniLista(0);}
 		    ;
 		    
-sentencia : variable TASSIG expresion TSEMIC 
-	  | RIF expresion RTHEN bloque TSEMIC 
-	  | RWHILE RFOREVER bloque TSEMIC 
-	  | RWHILE expresion RLOOP bloque RFINALLY bloque TSEMIC 
-	  | REXIT RIF expresion TSEMIC 
+sentencia : variable TASSIG expresion TSEMIC
+	  { 
+		codigo.anadirInstruccion($1->nom + ":=" + $3->nom + ";");
+		$$ = new sentenciastruct;
+		$$->exits = codigo.iniLista(0);
+		delete $1; delete $3;
+	  }
+	  | RIF expresion RTHEN M bloque M TSEMIC 
+	  {
+	  	codigo.completarInstrucciones($2->trues, $4->ref);
+		codigo.completarInstrucciones($2->falses, $6->ref);
+		$$ = new sentenciastruct; $$->exits = $5->exits;
+		delete $2; delete $4; delete $5; delete $6;
+	  }
+	  | RWHILE RFOREVER M bloque M TSEMIC
+	  {
+		codigo.anadirInstruccion("goto" + to_string($3->ref) + ";");
+		codigo.completarInstrucciones($4->exits,$5->ref + 1);
+		$$ = new sentenciastruct;
+		$$->exits = codigo.iniLista(0);
+		delete $3; delete $4; delete $5;
+	  }
+	  | RWHILE M expresion RLOOP M bloque M {codigo.anadirInstruccion("goto");} RFINALLY M bloque M TSEMIC 
+	  {
+		codigo.completarInstrucciones($3->trues,$5->ref);
+		codigo.completarInstrucciones($3->falses,$10->ref);
+		codigo.completarInstrucciones($6->exits,$10->ref);
+		codigo.completarInstrucciones($11->exits,$12->ref);
+		vector<int> tmp;
+		tmp.push_back($7->ref);
+		codigo.completarInstrucciones(tmp,$2->ref);
+		$$ = new sentenciastruct;
+		$$->exits = codigo.iniLista(0);
+		delete $2; delete $3; delete $5; delete $6; delete $7; delete $10; delete $11; delete $12;
+	  }
+	  | REXIT RIF expresion M TSEMIC
+	  {
+		codigo.completarInstrucciones($3->falses, $4->ref);
+		$$ = new sentenciastruct; $$->exits = $3->trues;
+		delete $3; delete $4;
+	  } 
 	  | RREAD TLPAREN variable TRPAREN TSEMIC 
-	  | RPRINT TLPAREN expresion TRPAREN TSEMIC 
+	  {
+		  codigo.anadirInstruccion("read " + $3->nom + ";");
+		  $$ = new sentenciastruct; $$->exits = codigo.iniLista(0);
+		  delete $3;
+	  }
+	  | RPRINT TLPAREN expresion TRPAREN TSEMIC
+	  {
+		  codigo.anadirInstruccion("write " + $3->nom + ";");
+		  codigo.anadirInstruccion("writeln;");
+		  $$ = new sentenciastruct; $$->exits = codigo.iniLista(0);
+		  delete $3;
+	  }
 	  ;
 
-variable : TIDENTIFIER {$$ = new string(); *$$ = *$1;};
+M: %empty { $$ = new mstruct; $$->ref = codigo.obtenRef(); } ;
 
-expresion : expresion TCEQ expresion 
-	  | expresion TCGT expresion 
-	  | expresion TCLT expresion 
-	  | expresion TCGE expresion 
-	  | expresion TCLE expresion 
-	  | expresion TCNE expresion 
-	  | expresion TPLUS expresion 
-	  { $$ = new string(); *$$ = codigo.nuevoId();
-	    codigo.anadirInstruccion(*$$ + " := " + *$1 + " + " + *$3 + ";");
-		delete $1; delete $3;}
-	  | expresion TMINUS expresion 
-	  { $$ = new string(); *$$ = codigo.nuevoId();
-	    codigo.anadirInstruccion(*$$ + " := " + *$1 + " - " + *$3 + ";");
-		delete $1; delete $3;}
-	  | expresion TMUL expresion 
-	  { $$ = new string(); *$$ = codigo.nuevoId();
-	    codigo.anadirInstruccion(*$$ + " := " + *$1 + " * " + *$3 + ";");
-		delete $1; delete $3;}
-	  | expresion TDIV expresion 
-	  { $$ = new string(); *$$ = codigo.nuevoId();
-	    codigo.anadirInstruccion(*$$ + " := " + *$1 + " / " + *$3 + ";");
-		delete $1; delete $3;}
-	  | variable {$$ = new string(); *$$ = *$1; delete $1;}
-	  | TINTEGER {$$ = new string(); *$$ = *$1;}
-	  | TFLOAT {$$ = new string(); *$$ = *$1;}
-	  | TLPAREN expresion TRPAREN {$$ = new string(); *$$ = *$1; delete $1;}
+variable: TIDENTIFIER { $$ = new variablestruct; $$->nom = *$1; } ;
+
+expresion : expresion TCEQ expresion
+	  {
+		  $$ = new expresionstruct;
+		  $$->nom = codigo.iniNom();
+		  $$->trues = codigo.iniLista(codigo.obtenRef());
+		  $$->falses = codigo.iniLista(codigo.obtenRef()+1);
+		  codigo.anadirInstruccion("if " + $1->nom + " = " + $3->nom + " goto");
+		  codigo.anadirInstruccion("goto");
+		  delete $1; delete $3;
+	  }
+	  | expresion TCGT expresion
+	  {
+		  $$ = new expresionstruct;
+		  $$->nom = codigo.iniNom();
+		  $$->trues = codigo.iniLista(codigo.obtenRef());
+		  $$->falses = codigo.iniLista(codigo.obtenRef()+1);
+		  codigo.anadirInstruccion("if " + $1->nom + " > " + $3->nom + " goto");
+		  codigo.anadirInstruccion("goto");
+		  delete $1; delete $3;
+	  } 
+	  | expresion TCLT expresion
+	  {
+		  $$ = new expresionstruct;
+		  $$->nom = codigo.iniNom();
+		  $$->trues = codigo.iniLista(codigo.obtenRef());
+		  $$->falses = codigo.iniLista(codigo.obtenRef()+1);
+		  codigo.anadirInstruccion("if " + $1->nom + " < " + $3->nom + " goto");
+		  codigo.anadirInstruccion("goto");
+		  delete $1; delete $3;
+	  } 
+	  | expresion TCGE expresion
+	  {
+		  $$ = new expresionstruct;
+		  $$->nom = codigo.iniNom();
+		  $$->trues = codigo.iniLista(codigo.obtenRef());
+		  $$->falses = codigo.iniLista(codigo.obtenRef()+1);
+		  codigo.anadirInstruccion("if " + $1->nom + " >= " + $3->nom + " goto");
+		  codigo.anadirInstruccion("goto");
+		  delete $1; delete $3;
+	  }
+	  | expresion TCLE expresion
+	  {
+		  $$ = new expresionstruct;
+		  $$->nom = codigo.iniNom();
+		  $$->trues = codigo.iniLista(codigo.obtenRef());
+		  $$->falses = codigo.iniLista(codigo.obtenRef()+1);
+		  codigo.anadirInstruccion("if " + $1->nom + " <= " + $3->nom + " goto");
+		  codigo.anadirInstruccion("goto");
+		  delete $1; delete $3;
+	  } 
+	  | expresion TCNE expresion
+	  {
+		  $$ = new expresionstruct;
+		  $$->nom = codigo.iniNom();
+		  $$->trues = codigo.iniLista(codigo.obtenRef());
+		  $$->falses = codigo.iniLista(codigo.obtenRef()+1);
+		  codigo.anadirInstruccion("if " + $1->nom + " != " + $3->nom + " goto");
+		  codigo.anadirInstruccion("goto");
+		  delete $1; delete $3;
+	  } 
+	  | expresion TPLUS expresion
+	  {
+		  $$ = new expresionstruct;
+		  $$->nom = codigo.nuevoId();
+		  codigo.anadirInstruccion($$->nom + " := " + $1->nom + " + " + $3->nom + ";");
+		  $$->trues = codigo.iniLista(0);
+		  $$->falses = codigo.iniLista(0);
+		  delete $1; delete $3;
+	  } 
+	  | expresion TMINUS expresion
+	  {
+		  $$ = new expresionstruct;
+		  $$->nom = codigo.nuevoId();
+		  codigo.anadirInstruccion($$->nom + " := " + $1->nom + " - " + $3->nom + ";");
+		  $$->trues = codigo.iniLista(0);
+		  $$->falses = codigo.iniLista(0);
+		  delete $1; delete $3;
+	  } 
+	  | expresion TMUL expresion
+	  {
+		  $$ = new expresionstruct;
+		  $$->nom = codigo.nuevoId();
+		  codigo.anadirInstruccion($$->nom + " := " + $1->nom + " * " + $3->nom + ";");
+		  $$->trues = codigo.iniLista(0);
+		  $$->falses = codigo.iniLista(0);
+		  delete $1; delete $3;
+	  } 
+	  | expresion TDIV expresion
+	  {
+		  $$ = new expresionstruct;
+		  $$->nom = codigo.nuevoId();
+		  codigo.anadirInstruccion($$->nom + " := " + $1->nom + " / " + $3->nom + ";");
+		  $$->trues = codigo.iniLista(0);
+		  $$->falses = codigo.iniLista(0);
+		  delete $1; delete $3;
+	  } 
+	  | variable
+	  {
+		  $$ = new expresionstruct;
+		  $$->nom = $1->nom;
+		  $$->trues = codigo.iniLista(0);
+		  $$->falses = codigo.iniLista(0);
+		  delete $1;
+	  }
+	  | TINTEGER 
+	  {
+		$$ = new expresionstruct;
+		$$->nom = *$1;
+		$$->trues = codigo.iniLista(0);
+		$$->falses = codigo.iniLista(0);
+	  }
+	  | TFLOAT 
+	  {
+		$$ = new expresionstruct;
+		$$->nom = *$1;
+		$$->trues = codigo.iniLista(0);
+		$$->falses = codigo.iniLista(0);
+	  }
+	  | TLPAREN expresion TRPAREN {$$ = $2; delete $2;}
 	  ;
+
+%%

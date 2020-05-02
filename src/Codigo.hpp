@@ -5,6 +5,7 @@
 #include <fstream>
 #include <set>
 #include <vector>
+#include "Structs.hpp"
 
 /* Estructura de datos para el código generado. El código, en vez de escribirlo directamente, 
  * se guarda en esta estructura y, al final, se escribirán en un fichero.
@@ -57,6 +58,17 @@ public:
 
 	/* Devuelve el número de la siguiente instrucción. */
 	int obtenRef() const;
+
+	std::string iniNom();
+
+	std::vector<int> iniLista(int arg);
+	std::vector<std::string> iniLista(std::string arg);
+
+	expresionstruct makecomparison(std::string &s1, std::string &s2, std::string &s3);
+   	expresionstruct makearithmetic(std::string &s1, std::string &s2, std::string &s3);
+
+	std::vector<int> *unir(std::vector<int> &list1, std::vector<int> &list2);
+	std::vector<std::string> *unir(std::vector<std::string> &list1, std::vector<std::string> &list2);
 
 };
 

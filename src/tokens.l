@@ -3,9 +3,10 @@
 
 %{
  #include <string>
- #include <iostream>
  #include <vector>
- #include "parser.hpp" 
+ #include <iostream>
+ #include "Structs.hpp"
+ #include "parser.hpp"
  using namespace std;
 
  #define TOKEN(t) yylval.str = new string(yytext, yyleng) ; return t 
@@ -33,6 +34,7 @@ println                                              TOKEN(RPRINT);
 proc                                                 TOKEN(RPROC);
 in                                                   TOKEN(RIN);
 out                                                  TOKEN(ROUT);
+"in out"                                             TOKEN(RINOUT);
 "*"                                                  TOKEN(TMUL);
 "/"                                                  TOKEN(TDIV);
 "="                                                  TOKEN(TASSIG);

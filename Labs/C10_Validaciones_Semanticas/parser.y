@@ -126,7 +126,6 @@ stmts : stmt TSEMIC //Añadir la acción correspondiente
 stmt :  ident TASSIG expr { 
           codigo.anadirInstruccion(*$1 + *$2 + $3->str + ";") ; 
     	  delete $1 ; delete $3;
-	 //Falta inicializar el atributo de stmt
          $$ = new sentenciastruct;
          }
 	
@@ -140,8 +139,7 @@ stmt :  ident TASSIG expr {
     	  	
     	  	codigo.completarInstrucciones(*$6, $10) ;
 	      	delete $2 ;
- 		//Falta inicializar el atributo de stmt
-		$$ = new sentenciastruct; $$->cont = *unir($5->cont,$9->cont);
+		$$ = new sentenciastruct; $$->cont = *unir($5->cont,$9->cont); $$->supercont = *unir($5->supercont,$9->supercont);
                 delete $5; delete $9;
          }
 
@@ -155,22 +153,20 @@ stmt :  ident TASSIG expr {
 	  vector<int> tmp1 ; tmp1.push_back($8) ;
     	  codigo.completarInstrucciones(tmp1, $3) ;
 
-          //Falta completar stmts.cont
           codigo.completarInstrucciones($7->cont, $3);
+          $$ = new sentenciastruct;
           nWhiles--;
           if (nWhiles == 0) {
                 codigo.completarInstrucciones($7->supercont, $3);
+          } else {
+                $$->supercont = $7->supercont;
           }
- 	  //Falta inicializar el atributo de stmt
-          $$ = new sentenciastruct;
-
 	  delete $4 ;
 
 	}  
 	
 	| RCONTINUE RIF expr M
 	{ 
-	 //Falta su traducción
           codigo.completarInstrucciones($3->falses, $4);
           $$ = new sentenciastruct; $$->cont = $3->trues;
 	  delete $3;
@@ -178,13 +174,12 @@ stmt :  ident TASSIG expr {
 
         | RCONTINUE M
         {
-                $$ = new sentenciastruct; $$->cont.push_back($2);
-                codigo.anadirInstruccion("goto");
+          $$ = new sentenciastruct; $$->cont.push_back($2);
+          codigo.anadirInstruccion("goto");
         }
 
         | RSUPERCONT RIF expr M
 	{ 
-	 //Falta su traducción
           codigo.completarInstrucciones($3->falses, $4);
           $$ = new sentenciastruct; $$->supercont = $3->trues;
 	  delete $3;
@@ -201,8 +196,7 @@ M:  { $$ = codigo.obtenRef() ; }
 	;
 
 N:  {
-	$$ = new vector<int>;	
-        // vector<int> tmp1 ; tmp1.push_back(codigo.obtenRef()) ;
+	$$ = new vector<int>;
 	$$->push_back(codigo.obtenRef());
 	codigo.anadirInstruccion("goto");}
         ;

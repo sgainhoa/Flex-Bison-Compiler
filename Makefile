@@ -1,4 +1,4 @@
-CFLAGS=-Wall
+CFLAGS=-Wall -g
 TESTDIR=Pruebas
 SRCDIR=src
 
@@ -16,10 +16,9 @@ $(SRCDIR)/tokens.cpp: $(SRCDIR)/tokens.l $(SRCDIR)/parser.hpp
 $(SRCDIR)/parser: $(SRCDIR)/parser.cpp $(SRCDIR)/main.cpp $(SRCDIR)/tokens.cpp $(SRCDIR)/Codigo.hpp
 	g++ $(CFLAGS) -o $@ $(SRCDIR)/*.cpp 
 
-prueba:  $(SRCDIR)/parser  $(TESTDIR)/PruebaBuena1.in $(TESTDIR)/PruebaBuena2.in $(TESTDIR)/prueba2.in $(TESTDIR)/PruebaMala1.in $(TESTDIR)/PruebaMala2.in $(TESTDIR)/pruebamala1.in 
+prueba:  $(SRCDIR)/parser  $(TESTDIR)/PruebaBuena1.in $(TESTDIR)/PruebaBuena2.in $(TESTDIR)/PruebaBuena3.in $(TESTDIR)/PruebaMala1.in $(TESTDIR)/PruebaMala2.in
 	$(SRCDIR)/parser < $(TESTDIR)/PruebaBuena1.in
 	$(SRCDIR)/parser < $(TESTDIR)/PruebaBuena2.in
-	$(SRCDIR)/parser < $(TESTDIR)/prueba2.in
+	$(SRCDIR)/parser < $(TESTDIR)/PruebaBuena3.in
 	$(SRCDIR)/parser < $(TESTDIR)/PruebaMala1.in
-	$(SRCDIR)/parser < $(TESTDIR)/pruebamala1.in
 	$(SRCDIR)/parser < $(TESTDIR)/PruebaMala2.in
