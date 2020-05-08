@@ -124,15 +124,16 @@ lista_de_param : tipo lista_de_ident TCOLON clase_par { codigo.anadirParametros(
 
 clase_par : RIN {
 			$$ = new clase_parstruct;
-			$$->tipo = "in";
+			$$->tipo = "val";
 		}
 	  | ROUT {
 		  	$$ = new clase_parstruct;
-			$$->tipo = "out";
+			$$->tipo = "ref";
 			}
-	  | RINOUT {
+	  | RIN ROUT {
 		  	$$ = new clase_parstruct;
-			$$->tipo = "in out";
+			$$->tipo = "ref";
+			cout << "Hola" << endl;
 			}
 	  ;
 

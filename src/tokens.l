@@ -34,7 +34,6 @@ println                                              TOKEN(RPRINT);
 proc                                                 TOKEN(RPROC);
 in                                                   TOKEN(RIN);
 out                                                  TOKEN(ROUT);
-"in out"                                             TOKEN(RINOUT);
 "*"                                                  TOKEN(TMUL);
 "/"                                                  TOKEN(TDIV);
 "="                                                  TOKEN(TASSIG);
