@@ -64,9 +64,6 @@ public:
 	std::vector<int> iniLista(int arg);
 	std::vector<std::string> iniLista(std::string arg);
 
-	expresionstruct makecomparison(std::string &s1, std::string &s2, std::string &s3);
-   	expresionstruct makearithmetic(std::string &s1, std::string &s2, std::string &s3);
-
 	std::vector<int> *unir(std::vector<int> &list1, std::vector<int> &list2);
 	std::vector<std::string> *unir(std::vector<std::string> &list1, std::vector<std::string> &list2);
 

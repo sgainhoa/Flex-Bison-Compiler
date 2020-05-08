@@ -147,19 +147,3 @@ vector<string> *Codigo::unir(vector<string> &list1, vector<string> &list2) {
   merged->insert(merged->end(),list2.begin(),list2.end());
   return merged;
 }
-
-expresionstruct Codigo::makecomparison(std::string &s1, std::string &s2, std::string &s3) {
-  expresionstruct tmp ; 
-  tmp.trues.push_back(obtenRef()) ;
-  tmp.falses.push_back(obtenRef()+1) ;
-  anadirInstruccion("if " + s1 + s2 + s3 + " goto") ;
-  anadirInstruccion("goto") ;
-  return tmp ;
-}
-
-expresionstruct Codigo::makearithmetic(std::string &s1, std::string &s2, std::string &s3) {
-  expresionstruct tmp ;
-  tmp.nom = nuevoId() ;
-  anadirInstruccion(tmp.nom + ":=" + s1 + s2 + s3 + ";") ;     
-  return tmp ;
-}
