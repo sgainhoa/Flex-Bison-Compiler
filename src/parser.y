@@ -133,7 +133,6 @@ clase_par : RIN {
 	  | RIN ROUT {
 		  	$$ = new clase_parstruct;
 			$$->tipo = "ref";
-			cout << "Hola" << endl;
 			}
 	  ;
 
@@ -173,8 +172,7 @@ sentencia : variable TASSIG expresion TSEMIC
 		codigo.completarInstrucciones($3->falses,$10->ref);
 		codigo.completarInstrucciones($6->exits,$10->ref);
 		codigo.completarInstrucciones($11->exits,$12->ref);
-		vector<int> tmp;
-		tmp.push_back($7->ref);
+		vector<int> tmp = codigo.iniLista($7->ref);
 		codigo.completarInstrucciones(tmp,$2->ref);
 		$$ = new sentenciastruct;
 		$$->exits = codigo.iniLista(0);
