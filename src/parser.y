@@ -321,7 +321,7 @@ expresion : expresion TCEQ expresion
 		$$->trues = codigo.iniLista(0);
 		$$->falses = codigo.iniLista(0);
 	  }
-	  | TLPAREN expresion TRPAREN {$$ = $2; delete $2;}
+	  | TLPAREN expresion TRPAREN {$$ = $2;}
 	  ;
 
 %%
